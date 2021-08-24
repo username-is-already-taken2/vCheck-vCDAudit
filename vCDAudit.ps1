@@ -61,7 +61,7 @@ Function Invoke-Settings ($Filename, $GB) {
 # Add all global variables.
 $ScriptPath = (Split-Path ((Get-Variable MyInvocation).Value).MyCommand.Path)
 $PluginsFolder = $ScriptPath + "\Plugins\"
-$Plugins = Get-ChildItem -Path $PluginsFolder -filter "*.ps1" | Sort Name
+$Plugins = Get-ChildItem -Path $PluginsFolder -filter "*.ps1" | Sort-Object Name
 $GlobalVariables = $ScriptPath + "\GlobalVariables.ps1"
 
 $file = Get-Content $GlobalVariables
@@ -203,7 +203,7 @@ $dspcont ="
 "
 
 Function Get-Base64Image ($Path) {
-	$pic = Get-Content $Path -Encoding Byte
+	$pic = Get-Content $Path -AsByteStream
 	[Convert]::ToBase64String($pic)
 }
 
@@ -371,7 +371,7 @@ $MyReport = Get-CustomHTML "$Server vCheck"
 $MyReport += Get-CustomHeader0Close
 $MyReport += Get-CustomHTMLClose
 
-if ($DisplayToScreen -or $SetupSetting) {
+if ($DisplaytoScreen -or $SetupSetting) {
 	Write-CustomOut "..Displaying HTML results"
 	$Filename = $Env:TEMP + "\" + $Server + "vCheck" + "_" + $Date.Day + "-" + $Date.Month + "-" + $Date.Year + ".htm"
 	$MyReport | out-file -encoding ASCII -filepath $Filename
@@ -385,9 +385,9 @@ if ($SendAttachment) {
 
 if ($Outputpath) {
 	$DateHTML = Get-Date -Format "yyyyMMddHH"
-	$ArchiveFilePath = $Outputpath + "\Archives\" + $VIServer
+	$ArchiveFilePath = $Outputpath + "\Archives\" + $Server
 	if (-not (Test-Path -PathType Container $ArchiveFilePath)) { New-Item $ArchiveFilePath -type directory | Out-Null }
-	$Filename = $ArchiveFilePath + "\" + $VIServer + "_vCheck_" + $DateHTML + ".htm"
+	$Filename = $ArchiveFilePath + "\" + $Server + "_vCheck_" + $DateHTML + ".htm"
 	$MyReport | out-file -encoding ASCII -filepath $Filename
 }
 
